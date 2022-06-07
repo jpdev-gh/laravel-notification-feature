@@ -20,6 +20,8 @@ class NotificationTest extends TestCase
     // filterByDateRange
     // validation for mark_as_read
     // MultipleFilter depends on needs
+    // write the tests depends on the client needs
+    // dont fcking write the tests on every fcking situations
 
     /**
      * @test

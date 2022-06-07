@@ -1,4 +1,4 @@
 Laravel Notification Feature
 
-This is a general laravel feature notification.
-You can integrate this to any of your application.
+- Tested Backend API
+- Client service located in public/js/notifications/notifications-service.js
