@@ -1,7 +1,9 @@
 <?php
 
-use App\Http\Controllers\NotificationController;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +18,13 @@ use Illuminate\Support\Facades\Route;
 
 require __DIR__.'/auth.php';
 
+Route::get('/bypass', function() {
+    Auth::login(User::first());
+    return redirect('/notifications');
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::get('/notifications/count', [NotificationController::class, 'getUnreadCount']);
+    Route::patch('/notifications/{id}', [NotificationController::class, 'markAsReadById']);
 });

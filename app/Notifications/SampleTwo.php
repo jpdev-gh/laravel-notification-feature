@@ -7,23 +7,26 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class SampleNotification extends Notification
+class SampleTwo extends Notification
 {
     use Queueable;
 
-    private $title = 'Sample';
+    private $title = 'Sample Two';
     
     private $body;
     
     private $clickAction;
+
+    private $sender;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($body, $clickAction)
+    public function __construct(object $sender, string $body, string $clickAction)
     {
+        $this->sender = $sender;
         $this->body = $body;
         $this->clickAction = $clickAction;
     }
@@ -48,9 +51,13 @@ class SampleNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'title'  => $this->title,
-            'body'  => $this->body,
+            'title'         => $this->title,
+            'body'          => $this->body,
             'click_action'  => $this->clickAction,
+            'sender'        => [
+                'name'  => $this->sender->name,
+                'photo'  => $this->sender->photo,
+            ]
         ];
     }
 }
