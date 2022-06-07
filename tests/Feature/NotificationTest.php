@@ -16,9 +16,9 @@ class NotificationTest extends TestCase
 {   
     use DatabaseTransactions;
 
-    // filterByReadAt
-    // filterByDateRange
-    // validation for mark_as_read
+    // filterByReadAt - assert if 20, 
+    // filterByDateRange - assert if 20, assert date 
+    // validation for single_notification_can_be_mark_as_read
     // MultipleFilter depends on needs
     // write the tests depends on the client needs
     // dont fcking write the tests on every fcking situations
@@ -31,8 +31,8 @@ class NotificationTest extends TestCase
         $this->withoutExceptionHandling();
 
         User::factory()->count(2)->create();
- 
-        NotificationTestService::generateNotificationsToAllUsers(15);
+
+        NotificationTestService::generateNotificationsToAllUsers(12);
 
         $response = $this->actingAs(User::first())->getJson('/notifications');
 
@@ -128,28 +128,6 @@ class NotificationTest extends TestCase
     /**
      * @test
      */
-    public function fetch_notifications_by_type()
-    {
-        $this->withoutExceptionHandling();
-
-        User::factory()->count(2)->create();
- 
-        NotificationTestService::generateNotificationsToAllUsers(2);
-
-        $type = array_rand(NotificationType::all(), 1);
-
-        $response = $this->actingAs(User::first())->getJson('/notifications?&type='.$type);
-
-        $response
-            ->assertOk()
-            ->assertJsonFragment(['type' => NotificationType::get($type)]);
-
-        $this->assertEquals(NotificationType::get($type), $response->json()['data'][0]['type']);
-    }    
-
-    /**
-     * @test
-     */
     public function fetch_unread_notifications_count()
     {
         $this->withoutExceptionHandling();
@@ -164,13 +142,15 @@ class NotificationTest extends TestCase
             $unreadNotification->markAsRead();
         }
 
+        $unreadNotifications = $user->unreadNotifications()->count();
+
         $response = $this->actingAs($user)->getJson('/notifications/count');
 
         $response
             ->assertOk()
-            ->assertExactJson(["count" => 7]);
+            ->assertExactJson(["count" => $unreadNotifications]);
 
-        $this->assertEquals(7, $response->json()['count']);
+        $this->assertEquals($unreadNotifications, $response->json()['count']);
     }
 
     /**
@@ -180,9 +160,9 @@ class NotificationTest extends TestCase
     {
         User::factory()->count(2)->create();
 
-        NotificationTestService::generateNotificationsToAllUsers(4);
+        NotificationTestService::generateNotificationsToAllUsers(2);
         
-        $this->assertEquals(8, count(User::first()->notifications));
+        $this->assertEquals(4, User::first()->notifications()->count());
     }    
 
     /**

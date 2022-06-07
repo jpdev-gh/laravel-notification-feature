@@ -12,10 +12,6 @@ class NotificationController extends Controller
     {   
         $notificationsQuery = auth()->user()->notifications();
 
-        if ($request->type) {
-            $notificationsQuery->where('type', NotificationType::get($request->type));
-        }
-
         $notificationsQuery = $request->take
                             ? $notificationsQuery->take($request->take)
                             : $notificationsQuery->take(20);
@@ -28,10 +24,12 @@ class NotificationController extends Controller
     public function markAsReadById(Request $request, string $id)
     {
         $notification = auth()->user()->notifications()
-                            ->where('id', $id)->first();
+                            ->where('id', $id)
+                            ->first();
+
         $notification->read_at = $request->read_at;
         $notification->save();
-
+        
         return new NotificationResource($notification);
     }
 
