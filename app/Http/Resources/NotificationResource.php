@@ -27,8 +27,8 @@ class NotificationResource extends JsonResource
                 'photo'   => $this->data['sender']['photo'],
             ],
             'read_at'       => [
-                'self'  => Carbon::parse($this->read_at)->format('Y-m-d H:i:s'),
-                'dfh'   => Carbon::parse($this->read_at)->diffForHumans(Carbon::parse($this->created_at)),
+                'self'  => is_null($this->read_at) ? $this->read_at : Carbon::parse($this->read_at)->format('Y-m-d H:i:s'),
+                'dfh'   => is_null($this->read_at) ? $this->read_at : Carbon::parse($this->read_at)->diffForHumans(Carbon::parse($this->created_at)),
             ],
             'created_at'    => [
                 'self'  => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),

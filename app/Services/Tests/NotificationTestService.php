@@ -40,4 +40,11 @@ class NotificationTestService
             'photo' => 'https://ui-avatars.com/api/?size=300&bold=true&background='.$color.'&color=ffffff&name='.substr($firstName, 0, 1).substr($lastName, 0, 1).'&bold=true&rounded=true&format=png',
         ];
     }
+
+    public static function markNotificationAsRead(User $user, int $num): void
+    {
+        foreach ($user->unreadNotifications()->take($num)->get() as $unreadNotification) {
+            $unreadNotification->markAsRead();
+        }
+    }
 }

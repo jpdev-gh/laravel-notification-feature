@@ -19,6 +19,7 @@ use App\Http\Controllers\NotificationController;
 require __DIR__.'/auth.php';
 
 Route::get('/bypass', function() {
+    User::factory()->create();
     Auth::login(User::first());
     return redirect('/notifications');
 });

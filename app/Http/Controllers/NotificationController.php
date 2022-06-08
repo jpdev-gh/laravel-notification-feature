@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Services\SampleService;
+use App\Exceptions\SampleException;
+use Illuminate\Support\Facades\Log;
 use App\Http\Resources\NotificationResource;
 use App\Services\Notifications\NotificationType;
 
@@ -12,11 +17,19 @@ class NotificationController extends Controller
     {   
         $notificationsQuery = auth()->user()->notifications();
 
+        if ($request->read_at === 'unread') {
+            $notificationsQuery->whereNull('read_at');
+        } else if ($request->read_at === 'read') {
+            $notificationsQuery->whereNotNull('read_at');
+        }
+
         $notificationsQuery = $request->take
                             ? $notificationsQuery->take($request->take)
                             : $notificationsQuery->take(20);
 
         $notifications = $notificationsQuery->get();
+
+        // return $notifications;
 
         return NotificationResource::collection($notifications);
     }

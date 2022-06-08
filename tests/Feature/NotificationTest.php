@@ -16,12 +16,13 @@ class NotificationTest extends TestCase
 {   
     use DatabaseTransactions;
 
-    // filterByReadAt - assert if 20, 
     // filterByDateRange - assert if 20, assert date 
     // validation for single_notification_can_be_mark_as_read
     // MultipleFilter depends on needs
     // write the tests depends on the client needs
     // dont fcking write the tests on every fcking situations
+    // add try catch to create, update, delete
+    // check filter if not supported return all as default
 
     /**
      * @test
@@ -125,6 +126,112 @@ class NotificationTest extends TestCase
             ]);
     }
 
+    /**
+     * @test
+     */
+    public function fetch_unread_notifications()
+    {
+        $this->withoutExceptionHandling();
+
+        User::factory()->count(1)->create();
+        
+        NotificationTestService::generateNotificationsToAllUsers(5); 
+
+        $user = User::first();
+
+        foreach ($user->unreadNotifications()->take(3)->get() as $unreadNotification) {
+            $unreadNotification->markAsRead();
+        }
+
+        $response = $this->actingAs($user)->getJson('/notifications?read_at=unread');
+
+        $response
+            ->assertOk()
+            ->assertJsonCount(7, 'data')
+            ->assertJsonPath('data.read_at.self', null)
+            ->assertJsonPath('data.read_at.dfh', null)
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'type',
+                        'title',
+                        'body',
+                        'click_action',
+                        'sender' => [
+                            'name',
+                            'photo',
+                        ],
+                        'read_at' => [
+                            'self',
+                            'dfh',
+                        ],
+                        'created_at' => [
+                            'self',
+                            'fdy',
+                        ],
+                        'updated_at',
+                    ]
+                ]
+            ]);
+
+
+        $this->assertNull($response->json()['data'][0]['read_at']['self']);
+        
+    }
+
+    /**
+     * @test
+     */
+    public function fetch_read_notifications()
+    {
+        $this->withoutExceptionHandling();
+
+        User::factory()->count(1)->create();
+        
+        NotificationTestService::generateNotificationsToAllUsers(5); 
+
+        $user = User::first();
+
+        NotificationTestService::markNotificationAsRead($user, 3);
+
+        $response = $this->actingAs($user)->getJson('/notifications?read_at=read');
+
+        $response
+            ->assertOk()
+            ->assertJsonCount(3, 'data')
+            ->assertJsonMissingExact(['read_at' => [
+                'self' => null,
+                'dfh' => null,
+            ]])
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'type',
+                        'title',
+                        'body',
+                        'click_action',
+                        'sender' => [
+                            'name',
+                            'photo',
+                        ],
+                        'read_at' => [
+                            'self',
+                            'dfh',
+                        ],
+                        'created_at' => [
+                            'self',
+                            'fdy',
+                        ],
+                        'updated_at',
+                    ]
+                ]
+            ]);
+
+        $this->assertIsString($response->json()['data'][0]['read_at']['self']);
+    }
+    
     /**
      * @test
      */
