@@ -15,12 +15,20 @@ class NotificationController extends Controller
 {
     public function index(Request $request)
     {   
+        // return $request;
         $notificationsQuery = auth()->user()->notifications();
 
         if ($request->read_at === 'unread') {
             $notificationsQuery->whereNull('read_at');
         } else if ($request->read_at === 'read') {
             $notificationsQuery->whereNotNull('read_at');
+        }
+
+        if ($request->date_start && $request->date_end) {
+            $notificationsQuery->whereBetween('created_at', [
+                $request->date_start,
+                $request->date_end,
+            ]);
         }
 
         $notificationsQuery = $request->take
@@ -36,6 +44,10 @@ class NotificationController extends Controller
 
     public function markAsReadById(Request $request, string $id)
     {
+        $request->validate([
+            'read_at' => ['required', 'string', 'date'],
+        ]);
+
         $notification = auth()->user()->notifications()
                             ->where('id', $id)
                             ->first();
