@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NotificationController;
@@ -19,6 +20,10 @@ use App\Http\Controllers\NotificationController;
 require __DIR__.'/auth.php';
 
 Route::get('/bypass', function() {
+    DB::transaction(function() {
+        DB::table('users')->truncate();
+        DB::table('notifications')->truncate();
+    });
     User::factory()->create();
     Auth::login(User::first());
     return redirect('/notifications');

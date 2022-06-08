@@ -15,7 +15,10 @@ class NotificationController extends Controller
 {
     public function index(Request $request)
     {   
-        // return $request;
+        if (!$request->expectsJson()) {
+            return view('notifications');
+        }
+
         $notificationsQuery = auth()->user()->notifications();
 
         if ($request->read_at === 'unread') {

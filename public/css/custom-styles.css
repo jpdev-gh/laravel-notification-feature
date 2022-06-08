@@ -1,0 +1,19 @@
+.header-notifications__dropdown {
+    padding: 15px 26px;
+    position: relative;
+    cursor: pointer;
+}
+
+.notifications__dropdown:hover {
+    background: #e41e3f;
+}
+
+.header-notifications__badge {
+    position: absolute;
+    top: 0px;
+    right: 13px;
+    padding: 0px 6px;
+    border-radius: 50%;
+    background: #e41e3f;
+    color: white;
+}

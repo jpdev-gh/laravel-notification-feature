@@ -5,11 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Carbon;
-use App\Notifications\SampleNotification;
-use App\Http\Resources\NotificationResource;
-use Illuminate\Support\Facades\Notification;
 use App\Services\Tests\NotificationTestService;
-use App\Services\Notifications\NotificationType;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class NotificationTest extends TestCase
@@ -66,7 +62,7 @@ class NotificationTest extends TestCase
 
     }
 
-    /**
+        /**
      * @test
      */
     public function fetch_4_recent_notifications()
@@ -168,6 +164,34 @@ class NotificationTest extends TestCase
 
         $this->assertNull($response->json()['data'][0]['read_at']['self']);
         
+    }
+
+    /**
+     * @test
+     */
+    public function fetch_unread_notifications_count()
+    {
+        $this->withoutExceptionHandling();
+
+        User::factory()->count(1)->create();
+        
+        NotificationTestService::generateNotificationsToAllUsers(5);
+
+        $user = User::first();
+
+        foreach ($user->unreadNotifications()->take(3)->get() as $unreadNotification) {
+            $unreadNotification->markAsRead();
+        }
+
+        $unreadNotifications = $user->unreadNotifications()->count();
+
+        $response = $this->actingAs($user)->getJson('/notifications/count');
+
+        $response
+            ->assertOk()
+            ->assertExactJson(["count" => $unreadNotifications]);
+
+        $this->assertEquals($unreadNotifications, $response->json()['count']);
     }
 
     /**
@@ -291,34 +315,6 @@ class NotificationTest extends TestCase
         //     dump($value->created_at->format('Y-m-d H:i:s'));
         // }));
     }    
-    
-    /**
-     * @test
-     */
-    public function fetch_unread_notifications_count()
-    {
-        $this->withoutExceptionHandling();
-
-        User::factory()->count(1)->create();
-        
-        NotificationTestService::generateNotificationsToAllUsers(5);
-
-        $user = User::first();
-
-        foreach ($user->unreadNotifications()->take(3)->get() as $unreadNotification) {
-            $unreadNotification->markAsRead();
-        }
-
-        $unreadNotifications = $user->unreadNotifications()->count();
-
-        $response = $this->actingAs($user)->getJson('/notifications/count');
-
-        $response
-            ->assertOk()
-            ->assertExactJson(["count" => $unreadNotifications]);
-
-        $this->assertEquals($unreadNotifications, $response->json()['count']);
-    }
 
     /**
      * @test
@@ -385,7 +381,7 @@ class NotificationTest extends TestCase
     /**
      * @test
      */
-    public function notification_can_not_be_mark_as_read_without_readat()
+    public function notification_cant_be_mark_as_read_without_readat_field()
     {
         $users = User::factory()->count(2)->create();
 
@@ -406,7 +402,7 @@ class NotificationTest extends TestCase
     /**
      * @test
      */
-    public function notification_can_not_be_mark_as_read_with_invalid_date()
+    public function notification_cant_be_mark_as_read_with_invalid_date()
     {
         $users = User::factory()->count(2)->create();
 
