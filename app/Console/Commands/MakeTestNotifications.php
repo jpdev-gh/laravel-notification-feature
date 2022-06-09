@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use App\Services\Tests\NotificationTestService;
+use App\Services\Notifications\NotificationTest as NotificationTestService;
 
 class MakeTestNotifications extends Command
 {
@@ -49,6 +49,6 @@ class MakeTestNotifications extends Command
 
         User::factory()->count(2)->create();
 
-        NotificationTestService::generateNotificationsToAllUsers(10);
+        NotificationTestService::sendNotificationsToAllUsers(10);
     }
 }

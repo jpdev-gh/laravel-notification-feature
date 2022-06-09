@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Tests;
+namespace App\Services\Notifications;
 
 use App\Models\User;
 use Faker\Generator;
@@ -9,12 +9,12 @@ use App\Notifications\SampleTwo;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Notification;
 
-class NotificationTestService
+class NotificationTest
 {
-    public static function generateNotificationsToAllUsers(int $total): void
+    public static function sendNotificationsToAllUsers(int $total): void
     {
         for ($item=1; $item <= $total; $item++) {
-            $sender = self::generateSender();
+            $sender = self::createSender();
 
             Notification::send(
                 User::all(), 
@@ -28,7 +28,7 @@ class NotificationTestService
         }
     }
 
-    private function generateSender()
+    private static function createSender()
     {
         $faker = Container::getInstance()->make(Generator::class);
         $firstName = $faker->firstName;
@@ -41,7 +41,7 @@ class NotificationTestService
         ];
     }
 
-    public static function markNotificationAsRead(User $user, int $num): void
+    public static function markNotificationsAsRead(User $user, int $num): void
     {
         foreach ($user->unreadNotifications()->take($num)->get() as $unreadNotification) {
             $unreadNotification->markAsRead();

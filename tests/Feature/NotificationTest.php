@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Carbon;
-use App\Services\Tests\NotificationTestService;
+use App\Services\Notifications\NotificationTest as NotificationTestService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class NotificationTest extends TestCase
@@ -21,9 +21,11 @@ class NotificationTest extends TestCase
 
         User::factory()->count(2)->create();
 
-        NotificationTestService::generateNotificationsToAllUsers(12);
+        NotificationTestService::sendNotificationsToAllUsers(12);
 
         $response = $this->actingAs(User::first())->getJson('/notifications');
+
+        dd($response->json());
 
         $response
             ->assertOk()
@@ -33,7 +35,7 @@ class NotificationTest extends TestCase
                 'title' => 'Sample Two',
             ])
             ->assertJsonMissing([
-                'title' => 'Sample Three',
+                'title' => 'Sample Three', 
             ])
             ->assertJsonStructure([
                 'data' => [
@@ -71,7 +73,7 @@ class NotificationTest extends TestCase
 
         User::factory()->count(2)->create();
  
-        NotificationTestService::generateNotificationsToAllUsers(3);
+        NotificationTestService::sendNotificationsToAllUsers(3);
 
         $response = $this->actingAs(User::first())->getJson('/notifications?take=4');
 
@@ -121,7 +123,7 @@ class NotificationTest extends TestCase
 
         User::factory()->count(1)->create();
         
-        NotificationTestService::generateNotificationsToAllUsers(5); 
+        NotificationTestService::sendNotificationsToAllUsers(5); 
 
         $user = User::first();
 
@@ -175,7 +177,7 @@ class NotificationTest extends TestCase
 
         User::factory()->count(1)->create();
         
-        NotificationTestService::generateNotificationsToAllUsers(5);
+        NotificationTestService::sendNotificationsToAllUsers(5);
 
         $user = User::first();
 
@@ -203,11 +205,11 @@ class NotificationTest extends TestCase
 
         User::factory()->count(1)->create();
         
-        NotificationTestService::generateNotificationsToAllUsers(5); 
+        NotificationTestService::sendNotificationsToAllUsers(5); 
 
         $user = User::first();
 
-        NotificationTestService::markNotificationAsRead($user, 3);
+        NotificationTestService::markNotificationsAsRead($user, 3);
 
         $response = $this->actingAs($user)->getJson('/notifications?read_at=read');
 
@@ -258,7 +260,7 @@ class NotificationTest extends TestCase
         $subDays = [360, 240, 190, 130, 120, 30, 25, 20, 15, 7, 2];
 
         foreach ($subDays as $subDay) {
-            NotificationTestService::generateNotificationsToAllUsers(1);
+            NotificationTestService::sendNotificationsToAllUsers(1);
 
             $user->notifications()->take(2)->update([
                 'created_at' => Carbon::parse('2022-06-08')->subDays($subDay),
@@ -323,7 +325,7 @@ class NotificationTest extends TestCase
     {
         User::factory()->count(2)->create();
 
-        NotificationTestService::generateNotificationsToAllUsers(5);
+        NotificationTestService::sendNotificationsToAllUsers(5);
         
         $this->assertEquals(10, User::first()->notifications()->count());
     }    
@@ -337,7 +339,7 @@ class NotificationTest extends TestCase
 
         $users = User::factory()->count(2)->create();
 
-        NotificationTestService::generateNotificationsToAllUsers(3);
+        NotificationTestService::sendNotificationsToAllUsers(3);
         
         $user = User::first();
 
@@ -385,7 +387,7 @@ class NotificationTest extends TestCase
     {
         $users = User::factory()->count(2)->create();
 
-        NotificationTestService::generateNotificationsToAllUsers(3);
+        NotificationTestService::sendNotificationsToAllUsers(3);
         
         $user = User::first();
 
@@ -406,7 +408,7 @@ class NotificationTest extends TestCase
     {
         $users = User::factory()->count(2)->create();
 
-        NotificationTestService::generateNotificationsToAllUsers(3);
+        NotificationTestService::sendNotificationsToAllUsers(3);
         
         $user = User::first();
 

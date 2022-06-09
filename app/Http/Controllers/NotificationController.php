@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\Sample;
 use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ use App\Services\Notifications\NotificationType;
 class NotificationController extends Controller
 {
     public function index(Request $request)
-    {   
+    {  
         if (!$request->expectsJson()) {
             return view('notifications');
         }
