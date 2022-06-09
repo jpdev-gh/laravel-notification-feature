@@ -28,11 +28,11 @@ class NotificationResource extends JsonResource
             ],
             'read_at'       => [
                 'self'  => is_null($this->read_at) ? $this->read_at : Carbon::parse($this->read_at)->format('Y-m-d H:i:s'),
-                'dfh'   => is_null($this->read_at) ? $this->read_at : Carbon::parse($this->read_at)->diffForHumans(Carbon::parse($this->created_at)),
             ],
             'created_at'    => [
                 'self'  => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
                 'fdy'   => Carbon::parse($this->created_at)->format('F d, Y'),
+                'dfh'   => Carbon::parse($this->created_at)->diffForHumans(Carbon::now()),
             ],
             'updated_at'    => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
         ];

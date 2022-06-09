@@ -25,8 +25,6 @@ class NotificationTest extends TestCase
 
         $response = $this->actingAs(User::first())->getJson('/notifications');
 
-        dd($response->json());
-
         $response
             ->assertOk()
             ->assertJsonCount(20, 'data')
@@ -51,11 +49,11 @@ class NotificationTest extends TestCase
                         ],
                         'read_at' => [
                             'self',
-                            'dfh',
                         ],
                         'created_at' => [
                             'self',
                             'fdy',
+                            'dfh',
                         ],
                         'updated_at',
                     ]
@@ -101,11 +99,11 @@ class NotificationTest extends TestCase
                         ],
                         'read_at' => [
                             'self',
-                            'dfh',
                         ],
                         'created_at' => [
                             'self',
                             'fdy',
+                            'dfh',
                         ],
                         'updated_at',
                     ]
@@ -152,11 +150,11 @@ class NotificationTest extends TestCase
                         ],
                         'read_at' => [
                             'self',
-                            'dfh',
                         ],
                         'created_at' => [
                             'self',
                             'fdy',
+                            'dfh',
                         ],
                         'updated_at',
                     ]
@@ -234,11 +232,11 @@ class NotificationTest extends TestCase
                         ],
                         'read_at' => [
                             'self',
-                            'dfh',
                         ],
                         'created_at' => [
                             'self',
                             'fdy',
+                            'dfh',
                         ],
                         'updated_at',
                     ]
@@ -297,11 +295,11 @@ class NotificationTest extends TestCase
                         ],
                         'read_at' => [
                             'self',
-                            'dfh',
                         ],
                         'created_at' => [
                             'self',
                             'fdy',
+                            'dfh',
                         ],
                         'updated_at',
                     ]
@@ -353,7 +351,6 @@ class NotificationTest extends TestCase
 
         $response
             ->assertSuccessful()
-            ->assertJsonPath('data.read_at.dfh', '5 hours before')
             ->assertJsonPath('data.read_at.self', (string) $readDate)
             ->assertJsonStructure([
                 'data' => [
@@ -368,11 +365,11 @@ class NotificationTest extends TestCase
                     ],
                     'read_at' => [
                         'self',
-                        'dfh',
                     ],
                     'created_at' => [
                         'self',
                         'fdy',
+                        'dfh',
                     ],
                     'updated_at',
                 ]

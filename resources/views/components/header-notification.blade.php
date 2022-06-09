@@ -1,7 +1,8 @@
 <x-dropdown align="right" width="min-w-320px">
     <x-slot name="trigger">
-        <a class="header-notifications__dropdown mr-2 flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
-            <i class="fa fa-bell" aria-hidden="true"></i><span class="header-notifications__badge">3</span>
+        <a class="header-notifications__dropdown postition-relative mr-2 flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+            <i class="fa fa-bell" aria-hidden="true"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">99+</span>
         </a>
     </x-slot>
 

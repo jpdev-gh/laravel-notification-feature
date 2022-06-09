@@ -1,5 +1,13 @@
+a {
+    text-decoration: none;
+}
+
 .min-w-320px {
     min-width: 320px;
+}
+
+.w-50 {
+    width: 50%;
 }
 
 .header-notifications__dropdown {
@@ -8,8 +16,8 @@
     cursor: pointer;
 }
 
-.notifications__dropdown:hover {
-    background: #e41e3f;
+.header-notifications__dropdown .translate-middle {
+    transform: translate(-100%,0%) !important;
 }
 
 .header-notifications__badge {
@@ -39,10 +47,24 @@
     border-radius: 50%;
     height: 40px;
     width: 40px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: 0.25s linear;
 }
 
 .notifications__item {
     padding: 0.75rem 1rem;
+    border-bottom: 1px solid #EEEEEE;
+}
+
+.notifications__item--read .notifications__badge {
+    opacity: 0;
+}
+
+.notifications__item:last-of-type {
+    padding: 0.75rem 1rem;
+    border-bottom: none;
 }
 
 .notifications__item:hover {
@@ -51,7 +73,7 @@
 
 .notifications__content {
     margin-left: 1rem;
-    max-width: 70%;
+    width: 70%;
 }
 
 .notifications__body {
@@ -59,6 +81,7 @@
     --bs-text-opacity: 1;
     color: #495057;
     margin-bottom: .5rem;
+    transition: 0.25s linear;
 }
 
 .notifications__date-wrapper {
@@ -73,8 +96,45 @@
 .notifications__badge {
     height: 12px;
     width: 12px;
-    background: #2e89ff;
     border-radius: 10rem;
     margin-left: auto;
     align-self: center;
+    transition: 0.25s linear;
+    opacity: 1;
+}
+
+.card-notifications__list--loading {
+    pointer-events: none;
+}
+
+.card-notifications__list--loading .notifications__user-photo {
+    background-image: url('/images/notification-blank-user-photo.png') !important;
+}
+
+.card-notifications__list--loading .notifications__body {
+    background-color: #F3F3F9 !important;
+    color: #F3F3F9 !important;
+    line-height: 1 !important;
+    border-radius: 200px;
+    width: 85%;
+    display: block;
+}
+
+.card-notifications__list--loading .notifications__date-wrapper i,
+.card-notifications__list--loading .notifications__date-wrapper .notifications__created-at {
+    display: none;
+}
+
+.card-notifications__list--loading .notifications__date-wrapper .notifications__read-at {
+    background-color: #F3F3F9 !important;
+    color: #F3F3F9 !important;
+    line-height: 1 !important;
+    border-radius: 200px;
+    display: block;
+    width: 25%;
+}
+
+
+.card-notifications__list--loading .notifications__badge {
+    opacity: 0;
 }

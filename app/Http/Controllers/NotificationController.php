@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\Sample;
 use Exception;
 use App\Models\User;
+use App\Exceptions\Sample;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Services\SampleService;
 use App\Exceptions\SampleException;
 use Illuminate\Support\Facades\Log;
@@ -46,18 +47,13 @@ class NotificationController extends Controller
         return NotificationResource::collection($notifications);
     }
 
-    public function markAsReadById(Request $request, string $id)
+    public function markAsReadById(string $id)
     {
-        $request->validate([
-            'read_at' => ['required', 'string', 'date'],
-        ]);
-
         $notification = auth()->user()->notifications()
                             ->where('id', $id)
                             ->first();
 
-        $notification->read_at = $request->read_at;
-        $notification->save();
+        $notification->update(['read_at' => Carbon::now()]);
         
         return new NotificationResource($notification);
     }
